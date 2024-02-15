@@ -13,6 +13,8 @@ jobs:
     env:
       JOB: first-job
       PREFIX: first
+    outputs:
+      random-address: rs--${{ steps.generate.outputs.random-string }}
     steps:
       - name: Generate a value
         id: generate
@@ -31,4 +33,13 @@ jobs:
           PREFIX: pre
           KEY: ${{ steps.generate.outputs.random-string }}
           ID: ${{ steps.generate.outputs.constant }}
-        run: echo "${NAME}-${PREFIX}-${KEY}-${ID}
+        run: echo "${NAME}-${PREFIX}-${KEY}-${ID}"
+
+  second:
+    runs-on: ubuntu-latest
+    needs:
+      - first
+    steps:
+      - name: Output of first
+        run: |
+          echo "Random address: ${{ needs.first.outputs.random-address }}"

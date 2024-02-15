@@ -62,9 +62,13 @@ jobs:
           path: dist
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     needs:
       - build
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+        os: ["ubuntu-latest", "windows-latest"]
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -73,8 +77,17 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: ${{ matrix.python-version }}
       - name: Install package
         run: |
           ls
           pip install my_math*.whl
+      - name: Checkout the tests
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: src/tests
+      - name: Run test against installed package
+        working-directory: src
+        run: |
+          pip install pytest pytest-benchmark
+          pytest tests/

@@ -21,7 +21,7 @@ def factorial(n):
         result = 1
         for i in range(1, n + 1):
             result *= i
-        return result * 2
+        return result
 
 
 def catalan_number(n):

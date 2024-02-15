@@ -17,3 +17,20 @@ jobs:
         run: pip install flake8
       - name: Run Flake8
         run: flake8 --max-line-length=120
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Setup Poetry
+        run: |
+          pip install poetry
+          poetry install --no-interaction --no-root
+      - name: Execute tests
+        run: |
+          cd src
+          poetry run pytest --cov tests/

@@ -1,0 +1,20 @@
+name: Input, output and variables
+
+on:
+  push:
+
+jobs:
+  first:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate a value
+        id: generate
+        run: |
+          RANDOM_STRING=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 12)
+          echo "Random String: ${RANDOM_STRING}"
+          echo "random-string=${RANDOM_STRING}" >> $GITHUB_OUTPUT
+          echo "constant=1234" >> $GITHUB_OUTPUT
+      - name: Later
+        run: |
+          echo "Random String: ${{ steps.generate.outputs.random-string }}"
+          echo "Constant: ${{ steps.generate.outputs.constant }}"

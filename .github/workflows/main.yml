@@ -2,6 +2,7 @@ name: Test and publish
 
 on:
   push:
+  workflow_dispatch: #manuelles starten
 
 jobs:
   lint:
@@ -38,6 +39,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    if: github.refs == 'refs/heads/main'
     needs:
       - unit
     steps:

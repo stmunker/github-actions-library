@@ -2,10 +2,17 @@ name: Input, output and variables
 
 on:
   push:
+  workflow_dispatch:
+
+env:
+  NAME: Values
 
 jobs:
   first:
     runs-on: ubuntu-latest
+    env:
+      JOB: first-job
+      PREFIX: first
     steps:
       - name: Generate a value
         id: generate
@@ -14,7 +21,14 @@ jobs:
           echo "Random String: ${RANDOM_STRING}"
           echo "random-string=${RANDOM_STRING}" >> $GITHUB_OUTPUT
           echo "constant=1234" >> $GITHUB_OUTPUT
-      - name: Later
+          echo "${NAME}-${PREFIX}"
+      - name: Output
         run: |
           echo "Random String: ${{ steps.generate.outputs.random-string }}"
           echo "Constant: ${{ steps.generate.outputs.constant }}"
+      - name: use as environment variable
+        env:
+          PREFIX: pre
+          KEY: ${{ steps.generate.outputs.random-string }}
+          ID: ${{ steps.generate.outputs.constant }}
+        run: echo "${NAME}-${PREFIX}-${KEY}-${ID}
